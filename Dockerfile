@@ -1,7 +1,8 @@
 FROM alpine:3.20
 
 ENV DISPLAY=:1 \
-    HOME=/root
+    HOME=/root \
+    LIBGL_ALWAYS_SOFTWARE=1
 
 RUN apk add --no-cache \
     firefox \
@@ -30,8 +31,8 @@ RUN adduser -D -h /home/browser browser && \
     '# Password VNC: default 123456; ganti melalui env VNC_PASSWORD' \
     'x11vnc -storepasswd "${VNC_PASSWORD:-123456}" /root/.vnc/passwd >/dev/null' \
     '' \
-    '# Jalankan Xvfb dan tunggu sampai display siap' \
-    'Xvfb :1 -screen 0 1366x900x24 -nolisten tcp -ac &' \
+    '# Jalankan Xvfb pada resolusi 1368x900 dan tunggu sampai display siap' \
+    'Xvfb :1 -screen 0 1368x900x24 -nolisten tcp -ac &' \
     'i=0' \
     'while [ ! -S /tmp/.X11-unix/X1 ]; do' \
     '  i=$((i + 1))' \
@@ -42,11 +43,11 @@ RUN adduser -D -h /home/browser browser && \
     '  sleep 1' \
     'done' \
     '' \
-    '# Jalankan Firefox sebagai user non-root; --no-sandbox dihapus' \
+    '# Jalankan Firefox sebagai user non-root' \
     'su-exec browser env DISPLAY=:1 HOME=/home/browser dbus-run-session -- firefox --no-remote &' \
     '' \
     '# Jalankan VNC di foreground agar container tetap hidup' \
-    'exec x11vnc -display :1 -rfbport 5901 -rfbauth /root/.vnc/passwd -forever -shared -noxdamage' \
+    'exec x11vnc -display :1 -rfbport 5901 -rfbauth /root/.vnc/passwd -forever -shared -noxdamage -nowf' \
     > /startup.sh && \
     chmod +x /startup.sh
 
