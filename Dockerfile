@@ -18,11 +18,8 @@ RUN apk add --no-cache \
     adduser -D -h /home/browser browser && \
     mkdir -p /home/browser/firefox-profile /root/.vnc && \
     printf '%s\n' \
-      'user_pref("dom.ipc.processCount", 2);' \
-      'user_pref("browser.tabs.unloadOnLowMemory", true);' \
-      'user_pref("browser.tabs.min_inactive_duration_before_unload", 60000);' \
-      'user_pref("browser.cache.memory.capacity", 32768);' \
-      'user_pref("browser.sessionhistory.max_entries", 6);' \
+      'user_pref("browser.tabs.unloadOnLowMemory", false);' \
+      'user_pref("browser.cache.memory.capacity", 16384);' \
       'user_pref("gfx.webrender.enabled", false);' \
       'user_pref("layers.acceleration.disabled", true);' \
       'user_pref("media.hardware-video-decoding.enabled", false);' \
